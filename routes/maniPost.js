@@ -167,7 +167,6 @@ router.put('/:id', async (req, res) => {
     const {
       name,
       description,
-      condition,
       dimensions,
       battery,
       sim,
@@ -195,7 +194,6 @@ router.put('/:id', async (req, res) => {
       {
         name,
         description,
-        condition,
         dimensions,
         battery,
         sim,
