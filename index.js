@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv/config");
 const cookieParser = require("cookie-parser");
-
+const portfinder = require('portfinder');
 
 
 
@@ -24,6 +24,11 @@ app.options("*", cors());
 app.use(cookieParser());
 
 
+app.use((req, res, next) => {
+  console.log(`Route called: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 const Cate = require("./routes/BestinnCatepost");
 const Mainpost = require("./routes/maniPost")
 
@@ -31,7 +36,7 @@ const Mainpost = require("./routes/maniPost")
 app.use('/categories', Cate);
 app.use('/mainpost', Mainpost);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4005;
 
 
 
@@ -43,6 +48,13 @@ mongoose.connect(process.env.CONNECTION_STRING)
     console.log(err);
   });
 
-app.listen(PORT, () => {
-  console.log(`Server is working on port ${PORT}  http://localhost:4000`);
-});
+
+portfinder.getPortPromise({ port: process.env.PORT || 4005 })
+  .then((port) => {
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Error finding an available port:', err);
+  });
